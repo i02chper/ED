@@ -16,7 +16,7 @@ template<class T>
 Stack<T>::Stack ()
 {
     //TODO
-
+    l_ = SList<T>::create();
     //
     assert(is_empty());
 }
@@ -33,7 +33,6 @@ typename Stack<T>::Ref Stack<T>::create(std::istream & in) noexcept(false)
     auto stack = Stack<T>::create();
     //TODO
     //Hint: unfold the list used as implementation.
-
     //
     return stack;
 }
@@ -43,7 +42,7 @@ bool Stack<T>::is_empty () const
 {
     bool ret_val = true;
     //TODO
-
+    ret_val = l_->is_empty();
     //
     return ret_val;
 }
