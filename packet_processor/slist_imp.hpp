@@ -76,7 +76,7 @@ typename SNode<T>::Ref SNode<T>::next() const
 {
     SNode<T>::Ref n;
     //TODO
-    n = _next;
+    n = this->_next;
     //
     return n;
 }
@@ -94,7 +94,7 @@ template <class T>
 void SNode<T>::set_next(SNode<T>::Ref n)
 {
     //TODO
-    _next= n;
+    this->_next= n;
     //
     assert(n == next());
 }
@@ -105,6 +105,7 @@ SList<T>::SList ()
     //TODO
     this->head_ = nullptr;
     this->current_= nullptr;
+    this->previous_= nullptr;
     this->Tam = 0;
     //
     assert(is_empty());
@@ -148,7 +149,7 @@ typename SList<T>::Ref SList<T>::create(std::istream& in) noexcept(false)
     //Hint: use std::istringstream to convert from "string" to template
     // parameter T type.
     // Throw std::runtime_error("Wrong input format.") exception when an input
-    // format error was found.
+    // format error was found. 
     auto list_aux = SList<T>::create();//Creamos este auxiliar para poder ordenar los inputs
 
     if (token == "[]") //si esta vacio, devolvemos la lista
@@ -221,7 +222,7 @@ T SList<T>::current() const
     assert(! is_empty());
     T c;
     //TODO
-    c = current_->item();
+    c = this->current_->item();
     //
     return c;
 }
@@ -245,10 +246,9 @@ T SList<T>::next() const
     assert(has_next());
     T ret_val = false;
     //TODO
-    if(this->has_next() == true){
-        current_->next()->item();
-        ret_val = true;
-    }
+        ret_val= current_->next()->item();
+
+
     //
     return ret_val;
 }
@@ -291,23 +291,18 @@ void SList<T>::fold(std::ostream& out) const
     //TODO
     typename SNode<T>::Ref iterator = head_;
 
-    out <<"["; // añadir al inicio la primera llave
+    if(is_empty()){
+        out<<"[]";
+    }else{
+        out<<"[";
 
-    if (iterator != nullptr)
-    {
-        out << " ";
-        out << head_->item();
-        while(iterator->has_next())
-        {
+        while(iterator !=nullptr){
+            out<<" "<<iterator->item();
             iterator = iterator->next();
-            out << " ";
-            out << iterator ->item();
         }
         out <<" ";
     }
-    out <<"]";
-
-    //
+    out<<"]";
 }
 
 template<class T>
@@ -340,7 +335,6 @@ void SList<T>::push_front(T const& new_it)
         current_ = head_;
         this->Tam = Tam+1;
     }
-    //
     assert(front()==new_it);
     assert(size() == (old_size+1));
 }
@@ -412,7 +406,9 @@ void SList<T>::remove()
     //Case 1: current is the head.
     if(current_ == head_)
     {
-        pop_front();       
+        pop_front();
+        this->previous_ = nullptr;
+        this->current_ = this->head_;
     }
     //Case 2: remove in a middle position.
     else
@@ -480,17 +476,20 @@ bool SList<T>::find(T const& it)
     assert(!is_empty());
     bool found = false;
     //TODO
-    current_= head_;
+    this->current_ = this->head_;
 
-    while(current_ != nullptr){
-
-        if(current_->item() == it){
-
+    while (this->current_->has_next() && !found)
+    {
+        if (this->current_->item() == it)
+        {
             found = true;
-            return found;
+            break;
         }
-       current_ = current_->next();
+
+        this->previous_ = this->current_;
+        this->current_ = this->current_->next();
     }
+
     //
     assert(!found || current()==it);
     assert(found || !has_next());
