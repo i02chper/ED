@@ -105,6 +105,7 @@ SList<T>::SList ()
     //TODO
     this->head_ = nullptr;
     this->current_= nullptr;
+    this->Tam = 0;
     //
     assert(is_empty());
 }
@@ -198,16 +199,7 @@ size_t SList<T>::size () const
 {
     size_t ret_val = 0;
     //TODO
-    if(is_empty() == true)
-    {
-        return ret_val;
-    }else{
-    current_ = head_;
-         while(current_ != nullptr){
-             ret_val++;
-             current_=current_->next();
-         }
-    }
+    ret_val = this->Tam;
     //
     return ret_val;
 }
@@ -341,10 +333,12 @@ void SList<T>::push_front(T const& new_it)
     {
         head_ = SNode<T>::create(new_it,head_);
         current_ = head_;
+        this->Tam = Tam+1;
     }else{
         auto newHead = SNode<T>::create(new_it,head_);
         head_ = newHead;
         current_ = head_;
+        this->Tam = Tam+1;
     }
     //
     assert(front()==new_it);
@@ -368,6 +362,7 @@ void SList<T>::insert(T const& new_it)
     }else{
         auto newNode = SNode<T>::create(new_it,current_->next());
         current_->set_next(newNode);
+        this->Tam = Tam+1;
     }
     //
     assert(!old_is_empty || (front()==new_it && current()==new_it));
@@ -388,11 +383,13 @@ void SList<T>::pop_front()
     {
         head_ = head_->next();
         current_= head_;
+        this->Tam = Tam-1;
     }
     else
     {
         head_ = nullptr;
         current_ = head_;
+        this->Tam = Tam-1;
     }
        //
     assert(is_empty() || head() == old_head_next);
@@ -431,6 +428,7 @@ void SList<T>::remove()
 
             auxNode->set_next(nullptr);
             current_ = auxNode;
+            this->Tam = Tam-1;
         }
 
     //Case 3: remove the last element.
@@ -445,6 +443,7 @@ void SList<T>::remove()
 
          auxNode->set_next(current_->next());
          current_=current_->next();
+         this->Tam = Tam-1;
         }
     }
     //

@@ -286,6 +286,7 @@ protected:
   //We want a size() operation with O(1).
   typename SNode<T>::Ref head_;
   typename SNode<T>::Ref current_;
+  T Tam=0;
   //
 };
 
