@@ -101,7 +101,6 @@ class Stack
 protected:
 
   typename SList<T>::Ref l_;
-
 };
 
 #include "stack_imp.hpp"
