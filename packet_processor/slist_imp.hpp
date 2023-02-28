@@ -169,15 +169,15 @@ typename SList<T>::Ref SList<T>::create(std::istream& in) noexcept(false)
         list_aux -> push_front(new_item);
     }
 
+    if(token != "]")
+    {
+        throw std::runtime_error("Wrong input format.");
+    }
+
     while (!list_aux->is_empty())
     {
         list->push_front(list_aux->front());
         list_aux->pop_front();
-    }
-
-    if(token != "]")
-    {
-        throw std::runtime_error("Wrong input format.");
     }
     //
     return list;
@@ -419,11 +419,10 @@ void SList<T>::remove()
             while(auxNode->next() != current_)
             {
                 auxNode = auxNode->next();
-
             }
 
-            auxNode->set_next(nullptr);
-            current_ = auxNode;
+            auxNode->set_next(current_->next());
+            current_=current_->next();
             this->Tam = Tam-1;
         }
 
@@ -431,15 +430,16 @@ void SList<T>::remove()
     //Remenber to locate previous of prev_.
         else
         {
-         auto auxNode = head_;
-         while(auxNode->next() != current_)
-         {
-             auxNode = auxNode->next();
-         }
+            auto auxNode = head_;
+            while(auxNode->next() != current_)
+            {
+                auxNode = auxNode->next();
 
-         auxNode->set_next(current_->next());
-         current_=current_->next();
-         this->Tam = Tam-1;
+            }
+
+            auxNode->set_next(nullptr);
+            current_ = auxNode;
+            this->Tam = Tam-1;
         }
     }
     //
@@ -478,7 +478,7 @@ bool SList<T>::find(T const& it)
     //TODO
     this->current_ = this->head_;
 
-    while (this->current_->has_next() && !found)
+    for(int i = 0; i<this->size(); i++)
     {
         if (this->current_->item() == it)
         {
@@ -489,7 +489,6 @@ bool SList<T>::find(T const& it)
         this->previous_ = this->current_;
         this->current_ = this->current_->next();
     }
-
     //
     assert(!found || current()==it);
     assert(found || !has_next());
