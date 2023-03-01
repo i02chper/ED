@@ -150,26 +150,28 @@ typename SList<T>::Ref SList<T>::create(std::istream& in) noexcept(false)
     // parameter T type.
     // Throw std::runtime_error("Wrong input format.") exception when an input
     // format error was found. 
-    auto list_aux = SList<T>::create();//Creamos este auxiliar para poder ordenar los inputs
-
-    if (token == "[]") //si esta vacio, devolvemos la lista
+    if (token == "[]") // si esta vacia devuelve la lista.
     {
         return list;
     }
-    if (token != "[") //si no empieza por [, devolvemos el error
+    if (token != "[") // si no empieza con "[" devuelve error.
     {
         throw std::runtime_error("Wrong input format.");
     }
 
     T new_item;
+    auto list_aux = SList<T>::create(); // crear una lista auxiliar para los inputs.
     while (in >> token && token != "]")
     {
         std::istringstream string(token);
-        string >> new_item;
-        list_aux -> push_front(new_item);
+        if (!(string >> new_item)) // comprueba si el token puede ser convertido a tipo T.
+        {
+            throw std::runtime_error("Wrong input format.");
+        }
+        list_aux->push_front(new_item);
     }
 
-    if(token != "]")
+    if (token != "]")
     {
         throw std::runtime_error("Wrong input format.");
     }
