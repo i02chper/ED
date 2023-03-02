@@ -478,11 +478,11 @@ bool SList<T>::find(T const& it)
     assert(!is_empty());
     bool found = false;
     //TODO
-    this->current_ = this->head_;
+    this->current_=this->head_;
 
-    for(int i = 0; i<this->size(); i++)
+    while(this->current_ != nullptr)
     {
-        if (this->current_->item() == it)
+        if(this->current_->item() == it)
         {
             found = true;
             break;
@@ -490,6 +490,14 @@ bool SList<T>::find(T const& it)
 
         this->previous_ = this->current_;
         this->current_ = this->current_->next();
+    }
+    if(!found){
+        this->current_=this->head_;
+        this->previous_= nullptr;
+
+        while (this->current_->next() != nullptr) {
+            this->current_ = this->current_->next();
+        }
     }
     //
     assert(!found || current()==it);
